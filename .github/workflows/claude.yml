@@ -29,4 +29,4 @@ jobs:
           ANTHROPIC_DEFAULT_SONNET_MODEL: deepseek-v4-pro[1m]
           ANTHROPIC_DEFAULT_HAIKU_MODEL: deepseek-v4-flash
         with:
-          claude_args: "--max-turns 10"
+          claude_args: "--max-turns 30"
