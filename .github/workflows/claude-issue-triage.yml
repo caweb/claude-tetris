@@ -82,4 +82,6 @@ jobs:
               en lugar de crear otro comentario nuevo. Evita duplicar diagnósticos en ediciones repetidas.
             - No elimines labels agregados por otras personas.
             - Responde y escribe el diagnóstico en español.
-          claude_args: "--max-turns 30"
+          claude_args: |
+            --max-turns 30
+            --allowedTools "Bash(gh label create:*),Bash(gh label list:*),Bash(gh issue edit:*),Bash(gh issue comment:*),Bash(gh issue view:*),Bash(gh api:*)"
