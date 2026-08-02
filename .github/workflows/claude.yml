@@ -29,4 +29,7 @@ jobs:
           ANTHROPIC_DEFAULT_SONNET_MODEL: deepseek-v4-pro[1m]
           ANTHROPIC_DEFAULT_HAIKU_MODEL: deepseek-v4-flash
         with:
-          claude_args: "--max-turns 30"
+          claude_args: |
+             --max-turns 30
+             --allowedTools "Bash(gh pr create:*),Bash(git push:*)"
+             --append-system-prompt "Cuando termines de hacer cambios y hacer push a la rama, abre tú mismo el Pull Request usando 'gh pr create' con un título y descripción claros, en vez de solo dejar un link para crearlo manualmente."
