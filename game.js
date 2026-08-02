@@ -301,4 +301,30 @@ document.addEventListener('keydown', e => {
 
 restartBtn.addEventListener('click', init);
 
+/* ---- Theme toggle ---- */
+const themeToggle = document.getElementById('theme-toggle');
+const themeIcon = themeToggle.querySelector('.icon');
+const themeLabel = themeToggle.querySelector('.toggle-label');
+
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  themeIcon.textContent = theme === 'light' ? '☀️' : '🌙';
+  themeLabel.textContent = theme === 'light' ? 'CLARO' : 'OSCURO';
+}
+
+function loadTheme() {
+  const saved = localStorage.getItem('tetris-theme');
+  return saved || 'dark';
+}
+
+themeToggle.addEventListener('click', () => {
+  const current = document.documentElement.getAttribute('data-theme') || 'dark';
+  const next = current === 'dark' ? 'light' : 'dark';
+  applyTheme(next);
+  localStorage.setItem('tetris-theme', next);
+});
+
+// Apply saved theme on load
+applyTheme(loadTheme());
+
 init();
