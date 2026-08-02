@@ -1,0 +1,85 @@
+name: Claude Issue Triage
+on:
+  issues:
+    types: [opened, edited]
+
+permissions:
+  contents: read
+  issues: write
+  id-token: write
+
+jobs:
+  triage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: anthropics/claude-code-action@v1
+        env:
+          ANTHROPIC_BASE_URL: https://api.deepseek.com/anthropic
+          ANTHROPIC_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+          ANTHROPIC_MODEL: deepseek-v4-pro[1m]
+          ANTHROPIC_DEFAULT_SONNET_MODEL: deepseek-v4-pro[1m]
+          ANTHROPIC_DEFAULT_HAIKU_MODEL: deepseek-v4-flash
+        with:
+          prompt: |
+            Eres un bot de triage y diagnóstico de issues para el repositorio ${{ github.repository }}.
+
+            Analiza el issue #${{ github.event.issue.number }}.
+
+            Título: ${{ github.event.issue.title }}
+
+            Cuerpo:
+            ${{ github.event.issue.body }}
+
+            Tienes acceso al código del repositorio en el directorio de trabajo. Úsalo para ubicar archivos
+            y funciones relevantes al problema.
+
+            Tareas:
+            1. Clasifica el tipo del issue y agrega el label correspondiente:
+               - type:bug — defecto / comportamiento incorrecto
+               - type:enhancement — nueva funcionalidad o mejora
+               - type:question — duda o consulta sin código involucrado
+            2. Determina la prioridad y agrega el label:
+               - priority:high — bloqueante o grave
+               - priority:medium — relevante pero no urgente
+               - priority:low — menor o cosmético
+            3. Agrega el label status:diagnosed al terminar.
+            4. Si algún label de la taxonomía (type:*, priority:*, status:*) no existe en el repo,
+               créalo primero con gh, por ejemplo:
+                 gh label create "type:bug" --color D73A4A --force
+               Colores sugeridos: type:* en D73A4A, priority:high en B60205, priority:medium en FB9A00,
+               priority:low en 0E8A16, status:* en 1D76DB.
+            5. Aplica los labels con:
+                 gh issue edit ${{ github.event.issue.number }} --add-label "type:..." --add-label "priority:..." --add-label "status:diagnosed"
+            6. Publica el diagnóstico como comentario del issue:
+                 gh issue comment ${{ github.event.issue.number }} --body "<diagnóstico>"
+
+            Formato del comentario de diagnóstico (usa exactamente el encabezado "## Diagnóstico"):
+              ## Diagnóstico
+
+              ### Resumen
+              Problema en una frase.
+
+              ### Comportamiento esperado
+              Qué debería pasar y qué pasa realmente.
+
+              ### Archivos / áreas afectadas
+              Archivos y funciones del repo relacionados, con ruta y línea si aplica.
+
+              ### Causa raíz probable
+              Si es un bug, la hipótesis más sólida con referencia al código.
+
+              ### Enfoque de solución propuesto
+              Pasos concretos para implementar el fix o la feature. Esto guiará la escritura del código.
+
+            Reglas:
+            - NO edites el título ni el cuerpo del issue bajo ninguna circunstancia.
+            - Antes de comentar, revisa si ya existe un comentario que empiece con "## Diagnóstico" usando:
+                gh issue view ${{ github.event.issue.number }} --json comments --jq '.comments[].body'
+              Si existe, EDITALO (obtén su id con --jq '.comments[] | {id, body}' y usa
+              gh api -X PATCH repos/${{ github.repository }}/issues/comments/<id> -f body=<nuevo diagnóstico>)
+              en lugar de crear otro comentario nuevo. Evita duplicar diagnósticos en ediciones repetidas.
+            - No elimines labels agregados por otras personas.
+            - Responde y escribe el diagnóstico en español.
+          claude_args: "--max-turns 30"
