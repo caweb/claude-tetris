@@ -250,15 +250,24 @@ function endGame() {
 
 function togglePause() {
   if (gameOver) return;
+  if (!startScreen.classList.contains('hidden')) return;
   paused = !paused;
   if (!paused) {
     pauseOverlay.classList.add('hidden');
+    if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
     lastTime = performance.now();
     loop(lastTime);
   } else {
     cancelAnimationFrame(animId);
     pauseOverlay.classList.remove('hidden');
+    pauseResumeBtn.focus();
   }
+}
+
+function getStartLevel() {
+  const saved = parseInt(localStorage.getItem('tetris-start-level'), 10);
+  if (isNaN(saved)) return 1;
+  return Math.min(15, Math.max(1, saved));
 }
 
 function loop(ts) {
@@ -283,10 +292,10 @@ function init() {
   board = createBoard();
   score = 0;
   lines = 0;
-  level = 1;
+  level = getStartLevel();
   paused = false;
   gameOver = false;
-  dropInterval = 1000;
+  dropInterval = Math.max(100, 1000 - (level - 1) * 90);
   dropAccum = 0;
   lastTime = performance.now();
   next = randomPiece();
@@ -301,7 +310,17 @@ function init() {
 }
 
 document.addEventListener('keydown', e => {
+  const t = e.target;
+  if (t && (t.tagName === 'INPUT' || t.tagName === 'SELECT' || t.tagName === 'TEXTAREA')) return;
   if (e.code === 'KeyP' || e.code === 'Escape') { togglePause(); return; }
+  const menuOpen =
+    !pauseOverlay.classList.contains('hidden') ||
+    !gameoverOverlay.classList.contains('hidden') ||
+    !startScreen.classList.contains('hidden');
+  if (menuOpen) {
+    if (e.code.startsWith('Arrow')) e.preventDefault();
+    return;
+  }
   if (paused || gameOver) return;
   switch (e.code) {
     case 'ArrowLeft':
@@ -324,6 +343,24 @@ document.addEventListener('keydown', e => {
   }
   updateHUD();
 });
+
+/* ---- Pause menu wiring ---- */
+pauseResumeBtn.addEventListener('click', () => {
+  if (paused) togglePause();
+});
+pauseRestartBtn.addEventListener('click', () => {
+  init();
+  if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
+});
+pauseControlsBtn.addEventListener('click', () => {
+  const isHidden = pauseControlsPanel.classList.contains('hidden');
+  pauseControlsPanel.classList.toggle('hidden');
+  pauseControlsBtn.textContent = isHidden ? 'Ocultar controles' : 'Ver controles';
+});
+startLevelSelect.addEventListener('change', () => {
+  localStorage.setItem('tetris-start-level', startLevelSelect.value);
+});
+startLevelSelect.value = String(getStartLevel());
 
 /* ---- Theme toggle ---- */
 const themeToggle = document.getElementById('theme-toggle');
