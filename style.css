@@ -200,6 +200,10 @@ kbd {
   display: none;
 }
 
+.hidden {
+  display: none !important;
+}
+
 .overlay-box {
   text-align: center;
   display: flex;
@@ -208,7 +212,7 @@ kbd {
   align-items: center;
 }
 
-#overlay-title {
+.overlay-title {
   font-size: 28px;
   font-weight: 800;
   letter-spacing: 4px;
@@ -216,14 +220,14 @@ kbd {
   transition: color 0.3s;
 }
 
-#overlay-score {
+.overlay-score {
   font-family: 'Courier New', Courier, monospace;
   font-size: 14px;
   color: var(--text-overlay-score);
   transition: color 0.3s;
 }
 
-#restart-btn {
+.menu-btn {
   margin-top: 8px;
   background: var(--accent);
   color: var(--btn-text);
@@ -237,6 +241,13 @@ kbd {
   transition: background 0.15s, color 0.3s;
 }
 
-#restart-btn:hover {
+.menu-btn:hover {
   background: var(--accent-hover);
 }
+
+/* ===== PAUSE-OWNED REGION ===== */
+/* ===== /PAUSE-OWNED REGION ===== */
+/* ===== RECORDS-OWNED REGION ===== */
+/* ===== /RECORDS-OWNED REGION ===== */
+/* ===== SKINS-OWNED REGION ===== */
+/* ===== /SKINS-OWNED REGION ===== */

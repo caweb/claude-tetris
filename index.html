@@ -24,6 +24,12 @@
           <span class="label">LEVEL</span>
           <span class="value" id="level">1</span>
         </div>
+        <!-- RECORDS-OWNED -->
+        <div class="panel-section">
+          <span class="label">MAX LINES</span>
+          <span class="value" id="max-lines">0</span>
+        </div>
+        <!-- /RECORDS-OWNED -->
 
         <div class="panel-section">
           <span class="label">NEXT</span>
@@ -41,6 +47,18 @@
           </ul>
         </div>
 
+        <!-- SKINS-OWNED -->
+        <div class="panel-section">
+          <span class="label">SKIN</span>
+          <select id="skin-select" class="skin-select">
+            <option value="retro">Retro</option>
+            <option value="neon">Neon</option>
+            <option value="pastel">Pastel</option>
+            <option value="pixel">Pixel</option>
+          </select>
+        </div>
+        <!-- /SKINS-OWNED -->
+
         <button class="theme-toggle" id="theme-toggle" title="Cambiar tema">
           <span class="icon">🌙</span>
           <span class="toggle-label">MODO</span>
@@ -48,13 +66,64 @@
       </aside>
     </div>
 
-    <div id="overlay" class="overlay hidden">
+    <!-- PAUSE-OWNED -->
+    <div id="pause-overlay" class="overlay hidden">
       <div class="overlay-box">
-        <p id="overlay-title">GAME OVER</p>
-        <p id="overlay-score"></p>
-        <button id="restart-btn">Reiniciar</button>
+        <p class="overlay-title">PAUSA</p>
+        <button class="menu-btn" id="pause-resume-btn">Reanudar</button>
+        <button class="menu-btn" id="pause-restart-btn">Reiniciar</button>
+        <button class="menu-btn" id="pause-controls-btn">Ver controles</button>
+        <div id="pause-controls-panel" class="controls hidden">
+          <ul>
+            <li><kbd>←</kbd><kbd>→</kbd> mover</li>
+            <li><kbd>↑</kbd> rotar</li>
+            <li><kbd>↓</kbd> bajar</li>
+            <li><kbd>Space</kbd> caída</li>
+            <li><kbd>P</kbd> / <kbd>Esc</kbd> pausa</li>
+          </ul>
+        </div>
+        <label class="menu-label" for="start-level-select">Nivel inicial</label>
+        <select id="start-level-select" class="menu-select">
+          <option value="1">1</option>
+          <option value="5">5</option>
+          <option value="10">10</option>
+          <option value="15">15</option>
+        </select>
       </div>
     </div>
+    <!-- /PAUSE-OWNED -->
+
+    <!-- RECORDS-OWNED -->
+    <div id="gameover-overlay" class="overlay hidden">
+      <div class="overlay-box">
+        <p class="overlay-title">GAME OVER</p>
+        <p class="overlay-score" id="gameover-score"></p>
+        <div id="record-entry" class="record-entry hidden">
+          <input id="player-name" type="text" maxlength="12" placeholder="Tu nombre" />
+          <button class="menu-btn" id="record-save-btn">Guardar</button>
+        </div>
+        <table class="records-table" id="records-table-gameover">
+          <thead><tr><th>#</th><th>Nombre</th><th>Puntos</th><th>Nivel</th><th>Líneas</th><th>Combo</th></tr></thead>
+          <tbody></tbody>
+        </table>
+        <p class="records-stats" id="records-stats-gameover"></p>
+        <button class="menu-btn" id="gameover-restart-btn">Jugar de nuevo</button>
+      </div>
+    </div>
+
+    <div id="start-screen" class="overlay hidden">
+      <div class="overlay-box">
+        <h1 class="overlay-title">TETRIS</h1>
+        <table class="records-table" id="records-table-start">
+          <thead><tr><th>#</th><th>Nombre</th><th>Puntos</th><th>Nivel</th><th>Líneas</th><th>Combo</th></tr></thead>
+          <tbody></tbody>
+        </table>
+        <p class="records-stats" id="records-stats-start"></p>
+        <button class="menu-btn" id="start-btn">Jugar</button>
+        <button class="menu-btn ghost-btn" id="records-reset-btn">Borrar récords</button>
+      </div>
+    </div>
+    <!-- /RECORDS-OWNED -->
   </div>
 
   <script src="game.js"></script>

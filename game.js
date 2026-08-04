@@ -37,12 +37,33 @@ const nextCtx = nextCanvas.getContext('2d');
 const scoreEl = document.getElementById('score');
 const linesEl = document.getElementById('lines');
 const levelEl = document.getElementById('level');
-const overlay = document.getElementById('overlay');
-const overlayTitle = document.getElementById('overlay-title');
-const overlayScore = document.getElementById('overlay-score');
-const restartBtn = document.getElementById('restart-btn');
+const maxLinesEl = document.getElementById('max-lines');
+const pauseOverlay = document.getElementById('pause-overlay');
+const pauseResumeBtn = document.getElementById('pause-resume-btn');
+const pauseRestartBtn = document.getElementById('pause-restart-btn');
+const pauseControlsBtn = document.getElementById('pause-controls-btn');
+const pauseControlsPanel = document.getElementById('pause-controls-panel');
+const startLevelSelect = document.getElementById('start-level-select');
+const gameoverOverlay = document.getElementById('gameover-overlay');
+const gameoverScore = document.getElementById('gameover-score');
+const recordEntry = document.getElementById('record-entry');
+const playerName = document.getElementById('player-name');
+const recordSaveBtn = document.getElementById('record-save-btn');
+const recordsTableGameover = document.getElementById('records-table-gameover');
+const recordsStatsGameover = document.getElementById('records-stats-gameover');
+const gameoverRestartBtn = document.getElementById('gameover-restart-btn');
+const startScreen = document.getElementById('start-screen');
+const recordsTableStart = document.getElementById('records-table-start');
+const recordsStatsStart = document.getElementById('records-stats-start');
+const startBtn = document.getElementById('start-btn');
+const recordsResetBtn = document.getElementById('records-reset-btn');
+const skinSelect = document.getElementById('skin-select');
 
 let board, current, next, score, lines, level, paused, gameOver, lastTime, dropAccum, dropInterval, animId;
+let combo = 0, bestCombo = 0, maxLines = 0;
+
+const initHooks = [];
+function addInitHook(fn) { initHooks.push(fn); }
 
 function createBoard() {
   return Array.from({ length: ROWS }, () => new Array(COLS).fill(0));
@@ -223,22 +244,20 @@ function drawNext() {
 function endGame() {
   gameOver = true;
   cancelAnimationFrame(animId);
-  overlayTitle.textContent = 'GAME OVER';
-  overlayScore.textContent = `Puntuación: ${score.toLocaleString()}`;
-  overlay.classList.remove('hidden');
+  gameoverScore.textContent = `Puntuación: ${score.toLocaleString()}`;
+  gameoverOverlay.classList.remove('hidden');
 }
 
 function togglePause() {
   if (gameOver) return;
   paused = !paused;
   if (!paused) {
+    pauseOverlay.classList.add('hidden');
     lastTime = performance.now();
     loop(lastTime);
   } else {
     cancelAnimationFrame(animId);
-    overlayTitle.textContent = 'PAUSA';
-    overlayScore.textContent = '';
-    overlay.classList.remove('hidden');
+    pauseOverlay.classList.remove('hidden');
   }
 }
 
@@ -273,13 +292,16 @@ function init() {
   next = randomPiece();
   spawn();
   updateHUD();
-  overlay.classList.add('hidden');
+  pauseOverlay.classList.add('hidden');
+  gameoverOverlay.classList.add('hidden');
+  startScreen.classList.add('hidden');
+  initHooks.forEach(fn => fn());
   cancelAnimationFrame(animId);
   animId = requestAnimationFrame(loop);
 }
 
 document.addEventListener('keydown', e => {
-  if (e.code === 'KeyP') { togglePause(); return; }
+  if (e.code === 'KeyP' || e.code === 'Escape') { togglePause(); return; }
   if (paused || gameOver) return;
   switch (e.code) {
     case 'ArrowLeft':
@@ -302,8 +324,6 @@ document.addEventListener('keydown', e => {
   }
   updateHUD();
 });
-
-restartBtn.addEventListener('click', init);
 
 /* ---- Theme toggle ---- */
 const themeToggle = document.getElementById('theme-toggle');
@@ -330,5 +350,14 @@ themeToggle.addEventListener('click', () => {
 
 // Apply saved theme on load
 applyTheme(loadTheme());
+
+/* ---- Debug / e2e handle ---- */
+window.__tetris = {
+  getState: () => ({
+    score, lines, level, combo, bestCombo, maxLines, paused, gameOver,
+    board: board && board.map(r => [...r]),
+  }),
+  debug: {},
+};
 
 init();
