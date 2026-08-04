@@ -246,6 +246,49 @@ kbd {
 }
 
 /* ===== PAUSE-OWNED REGION ===== */
+.menu-label {
+  font-size: 12px;
+  letter-spacing: 2px;
+  color: var(--text-label);
+  font-weight: 600;
+  margin-top: 8px;
+}
+
+.menu-select {
+  background: var(--kbd-bg);
+  color: var(--kbd-text);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 13px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.menu-select:hover,
+.menu-select:focus {
+  border-color: var(--accent);
+  outline: none;
+}
+
+#pause-controls-panel {
+  width: 100%;
+  text-align: left;
+  padding: 10px 14px;
+  background: var(--overlay-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+}
+
+#pause-controls-panel.controls ul {
+  gap: 8px;
+}
+
+.menu-btn:focus-visible {
+  outline: 2px solid var(--accent-hover);
+  outline-offset: 2px;
+}
 /* ===== /PAUSE-OWNED REGION ===== */
 /* ===== RECORDS-OWNED REGION ===== */
 /* ===== /RECORDS-OWNED REGION ===== */
