@@ -293,4 +293,24 @@ kbd {
 /* ===== RECORDS-OWNED REGION ===== */
 /* ===== /RECORDS-OWNED REGION ===== */
 /* ===== SKINS-OWNED REGION ===== */
+.skin-select {
+  width: 100%;
+  background: var(--kbd-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 6px 8px;
+  color: var(--text-primary);
+  font-size: 12px;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.skin-select:hover {
+  border-color: var(--accent);
+}
+
+.skin-select:focus {
+  outline: none;
+  border-color: var(--accent);
+}
 /* ===== /SKINS-OWNED REGION ===== */
