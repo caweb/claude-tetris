@@ -248,6 +248,84 @@ kbd {
 /* ===== PAUSE-OWNED REGION ===== */
 /* ===== /PAUSE-OWNED REGION ===== */
 /* ===== RECORDS-OWNED REGION ===== */
+
+.records-table {
+  width: 100%;
+  min-width: 320px;
+  border-collapse: collapse;
+  font-size: 12px;
+  color: var(--text-primary);
+}
+
+.records-table th,
+.records-table td {
+  padding: 4px 8px;
+  text-align: center;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.records-table th {
+  color: var(--text-label);
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.records-table tbody tr.highlight {
+  background: rgba(122, 162, 247, 0.18);
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.records-empty {
+  color: var(--text-label);
+  font-style: italic;
+  padding: 12px 0;
+}
+
+.records-stats {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 12px;
+  color: var(--text-overlay-score);
+}
+
+.record-entry {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+}
+
+.record-entry input {
+  background: var(--kbd-bg);
+  border: 1px solid var(--kbd-border);
+  border-radius: 6px;
+  padding: 8px 10px;
+  color: var(--text-primary);
+  font-size: 14px;
+  font-family: inherit;
+  outline: none;
+  width: 140px;
+}
+
+.record-entry input:focus {
+  border-color: var(--accent);
+}
+
+.ghost-btn {
+  background: transparent;
+  color: var(--text-label);
+  border: 1px solid var(--border-color);
+  font-size: 12px;
+  padding: 8px 20px;
+}
+
+.ghost-btn:hover {
+  background: var(--kbd-bg);
+  color: var(--text-primary);
+}
+
 /* ===== /RECORDS-OWNED REGION ===== */
 /* ===== SKINS-OWNED REGION ===== */
 /* ===== /SKINS-OWNED REGION ===== */
